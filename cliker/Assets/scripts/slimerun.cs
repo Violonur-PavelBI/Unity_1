@@ -15,9 +15,13 @@ public class slimerun : MonoBehaviour
     public int level=1;
     public int coins=1;
     public Color[] customColor;
+    public bool fulcrum=true;
     // Start is called before the first frame update
+    Rigidbody m_Rigidbody;
+    public float m_Thrust = 0.1f;
     void Start()
     {
+        m_Rigidbody = GetComponent<Rigidbody>();
     }
     // вызов функция ближайшего обьекта
     GameObject FindClosestEnemy() {
@@ -62,15 +66,25 @@ public class slimerun : MonoBehaviour
                 level=1;
             }
         }
+        if(collision.gameObject.tag !="food")
+        {
+            fulcrum=true;
+        }
     }
+    void OnCollisionExit(Collision collision) 
+    {   
+        if(collision.gameObject.tag !="food")
+        {
+            fulcrum=false;
+        }
+    
+    }
+
     // Update is called once per frame
     void Update()
     {
-        float velocity = ((transform.position - previous).magnitude) / Time.deltaTime;
-        previous = transform.position;
-        // вывод скорости
         // если слайм упал и не катиться
-        if (velocity<=0.1)//заменить что касаеться пола или стены
+        if (fulcrum==true)//заменить что касаеться пола или стены
         {
             // если он перевернулся выравниваеться
             if (System.Math.Abs(transform.rotation.eulerAngles.x)>=45.0 || System.Math.Abs(transform.rotation.eulerAngles.z)>=45.0)
@@ -80,19 +94,17 @@ public class slimerun : MonoBehaviour
                 // Dampen towards the target rotation
                 transform.rotation = Quaternion.Slerp(transform.rotation, target,  Time.deltaTime * smooth);
             }
-            else{}
-             // вызов функции ближайшего обьекта
+            // вызов функции ближайшего обьекта
             foods = GameObject.FindGameObjectsWithTag("food");
             if(foods.Length !=0)
             {
                 nearest =FindClosestEnemy();
                 // функция перемещения/прыжка
                 Vector3 diff = nearest.transform.position - transform.position;
-                float curDistance = diff.sqrMagnitude;
-                float step = moveSpeed* Time.deltaTime;
-                transform.position=Vector3.MoveTowards(transform.position,nearest.transform.position,step);
+                m_Rigidbody.AddForce((diff+ new Vector3(0f,3f,0f)) * m_Thrust,ForceMode.Impulse);
             }
         }
+        
     }
 }
 
