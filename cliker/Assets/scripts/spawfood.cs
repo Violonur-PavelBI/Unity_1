@@ -18,7 +18,9 @@ public class spawfood : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             // если луч от камеры через курсор прошёл через mach то там спавним food
             if (Physics.Raycast(ray, out hit))
-            Instantiate(prefab, new Vector3(hit.point.x-5.0f,hit.point.y+2.0f,hit.point.z), Random.rotation);
+            {
+            Instantiate(prefab, new Vector3(hit.point.x-5.0f,hit.point.y+5.0f,hit.point.z), transform.rotation);
+            }
         }
     // для сенсорного экрана
     }
