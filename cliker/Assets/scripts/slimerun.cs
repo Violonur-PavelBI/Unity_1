@@ -66,14 +66,14 @@ public class slimerun : MonoBehaviour
                 level=1;
             }
         }
-        if(collision.gameObject.tag !="food")
+        if(collision.gameObject.tag =="borders")
         {
             fulcrum=true;
         }
     }
     void OnCollisionExit(Collision collision) 
     {   
-        if(collision.gameObject.tag !="food")
+        if(collision.gameObject.tag =="borders")
         {
             fulcrum=false;
         }
@@ -101,7 +101,7 @@ public class slimerun : MonoBehaviour
                 nearest =FindClosestEnemy();
                 // функция перемещения/прыжка
                 Vector3 diff = nearest.transform.position - transform.position;
-                m_Rigidbody.AddForce((diff+ new Vector3(0f,3f,0f)) * m_Thrust,ForceMode.Impulse);
+                m_Rigidbody.AddForce((diff.normalized+ new Vector3(0f,2.0f,0f)) * m_Thrust,ForceMode.Impulse);
             }
         }
         
